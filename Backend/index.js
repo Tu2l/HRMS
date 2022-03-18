@@ -3,16 +3,26 @@ import { connection } from './connection.js'
 import { demo } from './router/demo.js'
 import { rol } from './router/rol.js'
 
-const app = express()
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 const PORT = process.env.PORT || 3000
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+
+const app = express()
+app.use(express.static(path.join(__dirname, './demo')))
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
 
 // CONNECTION EVENTS
 // When successfully connected
 connection.on('connected', () => {
     app.listen(PORT, () => {
-        console.log("Server started: localhost:"+PORT)
+        console.log("Server started: localhost:" + PORT)
     })
 });
 

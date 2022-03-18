@@ -2,7 +2,7 @@ import express from 'express'
 import { Employee } from '../model/Employee.js'
 export const demo = express.Router()
 
-const path = "../Backend/demo"
+const path = "./demo"
 
 
 //demo: returns list of registered users in json form
