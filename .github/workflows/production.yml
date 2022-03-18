@@ -24,5 +24,5 @@ jobs:
           args: deploy --dir=build --prod
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: 'hrms-prod-tu2l'
-          appdir: 'backend'
           heroku_email: 'debroytutul@gmail.com'
+          appdir: "Backend"
