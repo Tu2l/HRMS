@@ -4,7 +4,7 @@ import { demo } from './router/demo.js'
 import { rol } from './router/rol.js'
 
 const app = express()
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -12,7 +12,7 @@ app.use(express.json());
 // When successfully connected
 connection.on('connected', () => {
     app.listen(PORT, () => {
-        console.log("Server started: localhost:3000")
+        console.log("Server started: localhost:${PORT}")
     })
 });
 
