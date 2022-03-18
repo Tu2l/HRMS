@@ -1,0 +1,76 @@
+<style>
+	input {
+		padding: 10px;
+		margin: 5px;
+		width: 80%;
+		height: 50px;
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		border-width: 0px;
+		border-radius: 5px;
+		background-color: white;
+		color: black;
+
+	}
+
+	input:hover {
+		outline-color: green;
+	}
+
+	#submit {
+		border-color: #cacaca;
+		border-width: 0px;
+		border-radius: 5px;
+		background-color: orange;
+		font-weight: bold;
+	}
+
+	#submit:hover{
+		background-color: orangered;
+	}
+
+	h1 {
+		box-sizing: border-box;
+		border-radius: 5px 5px 0px 0px;
+		background-color: blue;
+		padding: 10px;
+		margin: 0px;
+		color: white;
+	}
+
+	.block {
+		background-color: #777877;
+		border-radius: 0px 0px 5px 5px;
+		box-shadow: 3px 3px hsla(0, 0%, 79%, 0.315);
+		padding: 30px;
+		justify-content: center;
+
+	}
+
+	#error {
+		color: red;
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		font-weight: bold;
+	}
+
+	.parent {
+		width: 30%;
+	}
+</style>
+
+<br>
+<br>
+
+<title>Demo Login</title>
+
+<center>
+	<div class="parent">
+		<h1>Demo Login</h1>
+		<div class="block">
+			<form action="/api/rol/login" method="post">
+				<input type="email" name="email" placeholder="Email" required><br>
+				<input type="password" name="password" placeholder="Password" required><br>
+				<input type="submit" name="submit" id="submit"><br>
+			</form>
+		</div>
+	</div>
+</center>

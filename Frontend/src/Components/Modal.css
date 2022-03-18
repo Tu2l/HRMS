@@ -1,0 +1,94 @@
+.modalBackground {
+  position: fixed;
+  margin-top: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContainer {
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7rem;
+  text-align: center;
+  height: 450px;
+  width: 450px;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(17, 17, 17, 0.945);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+
+h3 {
+  margin: 0 0 30px;
+  padding: 0;
+  color: rgb(250, 250, 250);
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: rgb(252, 252, 252);
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+label {
+  position: sticky;
+  top: 0;
+  left: 0;
+  padding: 10px 15px;
+  font-size: 13px;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.style-btn{
+    border-radius: 5px;
+}
+
+input:focus ~ label,
+input:valid ~ label {
+  top: 0px;
+  left: 0;
+  color: rgb(255, 107, 54);
+  font-size: 16px;
+}
+
+form .style-btn {
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  color: rgb(12, 0, 57);
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: 0.5s;
+  margin-top: 40px;
+  letter-spacing: 4px;
+}
+
+.style-btn:hover {
+  background: rgb(255, 107, 54);
+  color: rgb(253, 253, 253);
+  box-shadow: 0 0 3px rgb(255, 107, 54), 0 0 9px rgb(255, 107, 54), 0 0 20px rgb(255, 107, 54),
+    0 0 35px rgb(255, 107, 54);
+}
+
+.style-btn span {
+  position: absolute;
+  display: block;
+}

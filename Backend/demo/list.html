@@ -1,0 +1,122 @@
+<head>
+    <style>
+        h1,
+        h3,
+        h4 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white
+        }
+
+        h3,
+        h4 {
+            color: white;
+            text-align: left;
+        }
+
+        h1 {
+            box-sizing: border-box;
+            border-radius: 5px 5px 0px 0px;
+            background-color: blue;
+            padding: 10px;
+            margin: 0px;
+        }
+
+        .parent {
+            width: 50%;
+        }
+
+        .block {
+            background-color: #777877;
+            border-radius: 0px 0px 5px 5px;
+            box-shadow: 3px 3px hsla(0, 0%, 79%, 0.315);
+            padding: 30px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+
+        }
+
+        .sub-block {
+            background-color: black;
+            padding: 10px;
+            max-width: 250px;
+            min-width: 250px;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .delete:hover {
+            background-color: orange;
+        }
+
+        .delete {
+            padding: 10px;
+            width: 90%;
+            border-radius: 10px;
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            appearance: button;
+
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            background-color: red;
+
+        }
+
+        p{
+            color: white;
+            text-align: left;
+        }
+        @media only screen and (max-width: 768px) {
+            .sub-block {
+                width: 95%;
+                max-width: 95%;
+            }
+
+            .block {
+                flex-direction: column;
+            }
+
+            .parent {
+                width: 90%;
+
+            }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        window.onload = () => {
+            $.post("/demo/users/all",
+                function (data, status) {
+                    data.forEach(emp => {
+                        const div = `<div class="sub-block">
+                                        <h3>`+ emp.name + `<br></h3>
+                                        <p>`
+                                            + emp.emp_id + `<br><br>`
+                                            + emp.email + `<br><br>` 
+                                            + emp.phone + `<br><br>`
+                                            + emp.designation + " of "+ emp.department + " Department"+ `<br> 
+                                        </p>
+                                        <a class="delete" href="users/delete?id=`+ emp._id + `">Delete</a>
+                                    </div>`
+                        $('#block').append(div)
+                    });
+                });
+        }
+    </script>
+</head>
+
+<title>Members list</title>
+<br>
+<br>
+<br>
+<center>
+    <div class="parent">
+        <h1>Members list</h1>
+        <div class="block" id="block">
+        </div>
+    </div>
+
+</center>
