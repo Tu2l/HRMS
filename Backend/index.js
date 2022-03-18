@@ -10,10 +10,11 @@ app.use(express.json());
 
 // CONNECTION EVENTS
 // When successfully connected
+app.listen(PORT, () => {
+    console.log("Server started: localhost:"+PORT)
+})
 connection.on('connected', () => {
-    app.listen(PORT, () => {
-        console.log("Server started: localhost:${PORT}")
-    })
+    console.log("db connected")
 });
 
 // If the connection throws an error
@@ -22,18 +23,18 @@ connection.on('error', (err) => {
 });
 
 // When the connection is disconnected
-connection.on('disconnected', () => {
-    console.log('Mongoose default connection disconnected')
-    process.exit(0)
-});
+// connection.on('disconnected', () => {
+//     console.log('Mongoose default connection disconnected')
+//     process.exit(0)
+// });
 
-// If the Node process ends, close the Mongoose connection 
-process.on('SIGINT', () => {
-    connection.close(() => {
-        console.log('Mongoose connection disconnected through app termination')
-        process.exit(0)
-    });
-});
+// // If the Node process ends, close the Mongoose connection 
+// process.on('SIGINT', () => {
+//     connection.close(() => {
+//         console.log('Mongoose connection disconnected through app termination')
+//         process.exit(0)
+//     });
+// });
 
 
 /*
