@@ -3,12 +3,12 @@ import avatar from './../images/avatar-main.png';
 
 function Cards() {
   return (
-    <ul class="cards">
+    <ul className="cards">
     <li>
-      <div class="card">
-        <img src={avatar} class="card__image" alt="" />
-        <div class="card__overlay">
-          <p class="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
+      <div className="card">
+        <img src={avatar} className="card__image" alt="" />
+        <div className="card__overlay">
+          <p className="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
           </p>
         </div>
       </div>
@@ -17,10 +17,10 @@ function Cards() {
       </center>
     </li>
     <li>
-      <div class="card">
-        <img src={avatar} class="card__image" alt="" />
-        <div class="card__overlay">
-          <p class="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
+      <div className="card">
+        <img src={avatar} className="card__image" alt="" />
+        <div className="card__overlay">
+          <p className="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
           </p>
         </div>
       </div>
@@ -29,10 +29,10 @@ function Cards() {
       </center>
     </li>
     <li>
-      <div class="card">
-        <img src={avatar} class="card__image" alt="" />
-        <div class="card__overlay">
-          <p class="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
+      <div className="card">
+        <img src={avatar} className="card__image" alt="" />
+        <div className="card__overlay">
+          <p className="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
           </p>
         </div>
       </div>
@@ -41,10 +41,10 @@ function Cards() {
       </center>
     </li>
     <li>
-      <div class="card">
-        <img src={avatar} class="card__image" alt="" />
-        <div class="card__overlay">
-          <p class="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
+      <div className="card">
+        <img src={avatar} className="card__image" alt="" />
+        <div className="card__overlay">
+          <p className="card__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, blanditiis?
           </p>
         </div>
       </div>
