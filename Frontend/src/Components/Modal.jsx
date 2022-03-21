@@ -4,8 +4,10 @@ import swal from 'sweetalert';
 
 /* Get data from API endpoint */
 
+const url = window.location.href.toString().contains("localhost")?'http://localhost:5000/api/rol/login': '/api/rol/login';
+
 async function loginUser(credentials) {
-  return fetch('http://localhost:5000/api/rol/login', {
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
