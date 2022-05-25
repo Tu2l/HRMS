@@ -457,7 +457,11 @@ function Employees() {
 
         formData.append("file", fileField.files[0]);
 
-        fetch("http://localhost:5000/api/import/emp", {
+        const UPLOAD_URL = window.location.href.startsWith("http://localhost")
+        ? "http://localhost:5000/api/import/emp"
+        : "/api/import/emp";
+
+        fetch(UPLOAD_URL, {
           method: "POST",
           body: formData,
         })

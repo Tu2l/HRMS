@@ -30,7 +30,7 @@ function ViewProfile({ emp_id }) {
   async function getUserDetails(emp_id) {
     const URL = window.location.href.startsWith("http://localhost")
       ? "http://localhost:5000/api/user/get"
-      : "/user/get";
+      : "/api/user/get";
     const response = await fetch(URL, {
       method: "POST",
       headers: {
@@ -423,7 +423,12 @@ function ViewProfile({ emp_id }) {
     formData.append("emp_id", data_.emp_id);
     formData.append("file", fileField.files[0]);
 
-    fetch("http://localhost:5000/api/upload/profile", {
+    const UPLOAD_URL = window.location.href.startsWith("http://localhost")
+      ? "http://localhost:5000/api/upload/profile"
+      : "/api/upload/profile";
+
+
+    fetch(UPLOAD_URL, {
       method: "POST",
       body: formData,
     })
@@ -447,7 +452,11 @@ function ViewProfile({ emp_id }) {
     formData.append("emp_id", data_.emp_id);
     formData.append("file", fileField.files[0]);
 
-    fetch("http://localhost:5000/api/upload/cv", {
+    const UPLOAD_URL = window.location.href.startsWith("http://localhost")
+      ? "http://localhost:5000/api/upload/cv"
+      : "/api/upload/cv";
+
+    fetch(UPLOAD_URL, {
       method: "POST",
       body: formData,
     })
@@ -471,7 +480,12 @@ function ViewProfile({ emp_id }) {
     formData.append("emp_id", data_.emp_id);
     formData.append("file", fileField.files[0]);
 
-    fetch("http://localhost:5000/api/upload/appointment", {
+
+    const UPLOAD_URL = window.location.href.startsWith("http://localhost")
+      ? "http://localhost:5000/api/upload/appointment"
+      : "/api/upload/appointment";
+
+    fetch(UPLOAD_URL, {
       method: "POST",
       body: formData,
     })

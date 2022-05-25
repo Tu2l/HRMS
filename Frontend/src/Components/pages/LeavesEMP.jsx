@@ -267,7 +267,12 @@ function LeavesEMP() {
     formData.append("emp_id", data_.emp_id);
     formData.append("file", fileField.files[0]);
 
-    fetch("http://localhost:5000/api/upload", {
+    const UPLOAD_URL = window.location.href.startsWith("http://localhost")
+    ? "http://localhost:5000/api/upload/"
+    : "/api/upload/"
+
+
+    fetch(UPLOAD_URL, {
       method: "POST",
       body: formData,
     })

@@ -309,7 +309,11 @@ function Payroll() {
 
         formData.append("file", fileField.files[0]);
 
-        fetch("http://localhost:5000/api/import/pay", {
+        const UPLOAD_URL = window.location.href.startsWith("http://localhost")
+        ? "http://localhost:5000//api/import/pay"
+        : "/api/import/pay";
+
+        fetch(UPLOAD_URL, {
           method: "POST",
           body: formData,
         })
