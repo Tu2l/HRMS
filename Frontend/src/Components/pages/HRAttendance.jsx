@@ -134,7 +134,7 @@ function HRAttendance() {
             next: data.current_page,
           });
 
-          if (data.data != null) setEmpData(data.data);
+          if (data.data) setEmpData(data.data);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -261,7 +261,7 @@ function HRAttendance() {
           next: data.current_page,
         });
 
-        if (data.data != null) setEmpData(data.data);
+        if (data.data) setEmpData(data.data);
       })
       .catch((error) => {
         console.error("Error:", error);
