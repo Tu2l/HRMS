@@ -17,7 +17,7 @@ import {
   Chip,
   Avatar,
   CardHeader,
-  TextField
+  TextField,
 } from "@mui/material";
 import {
   style,
@@ -352,7 +352,7 @@ function Payroll() {
             total: data.total_page,
             next: data.current_page,
           });
-          console.log(data)
+          console.log(data);
           if (data.data != null) setEMP(data.data);
         })
         .catch((error) => {
@@ -360,7 +360,6 @@ function Payroll() {
         });
     else init();
   }
-
 
   return (
     <div className="pay-main">
@@ -799,11 +798,41 @@ function Payroll() {
       <div>
         {/* Employee details table */}
         <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={0} >
-            <Grid item xs={12} sm={12} md={12} sx={{ marginBottom: "-1%" }}>
+          <Grid container spacing={0}>
+            <Grid item xs={12} sm={12} md={6}>
+              <LightTooltip title="Select Month" placement="right">
+                <StyTextFieldLeave
+                  sx={{ width: "30%", marginLeft: "1%" }}
+                  defaultValue={monthSelect}
+                  type="month"
+                  inputProps={{
+                    max: getYear() + "-" + getMonth(),
+                  }}
+                  onChange={(e) => setMonthSelect(e.target.value)}
+                  size="small"
+                  variant="outlined"
+                />
+              </LightTooltip>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <ItemPara>
+                <div className="search">
+                  <TextField
+                    fullWidth
+                    id="outlined"
+                    size="small"
+                    variant="outlined"
+                    placeholder="Name..."
+                    label="Search Employee..."
+                    onChange={search}
+                  />
+                </div>
+              </ItemPara>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} sx={{ marginBottom: "-1%" }}>
               <ItemPara>
                 <YearlyBtn
-                  sx={{ marginLeft: "6px", marginTop: "1.5px", float: "rigth" }}
+                  sx={{ marginLeft: "6px", marginTop: "1.5px" }}
                   type="button"
                   variant="outlined"
                   onClick={employeePayUpload}
@@ -820,46 +849,24 @@ function Payroll() {
                   ref={fileInputRef}
                   id="employeePayUpload"
                   type="file"
-                  sx={{ width: "35%", float: "left" }}
+                  sx={{ width: "45%", float: "left" }}
                   helperText="Upload Salary Document (.xslx)"
                 />
               </ItemPara>
             </Grid>
-
             <Grid item xs={12} sm={12} md={6}>
-              <LightTooltip title="Select Month" placement="right">
-                <StyTextFieldLeave
-                  sx={{ width: "30%", marginLeft: "0.9%" }}
-                  defaultValue={monthSelect}
-                  type="month"
-                  inputProps={{
-                    max: getYear() + "-" + getMonth(),
-                  }}
-                  onChange={(e) => setMonthSelect(e.target.value)}
-                  size="small"
-                  variant="outlined"
-                />
-              </LightTooltip>
-            </Grid>
-
-
-
-            <Grid item xs={12} sm={12} md={6}>
+              {/* Select Status Type */}
               <ItemPara>
-                <div className="search">
-                  <TextField
-                    fullWidth
-                    id="outlined"
-                    size="small"
-                    variant="outlined"
-                    placeholder="Name..."
-                    label="Search Employee..."
-                    onChange={search}
-                  />
-                </div>
+                <Select
+                  className="select-empstatus"
+                  options={options}
+                  placeholder="Employee Status"
+                  onChange={(event) => {
+                    handleChange(event.value);
+                  }}
+                />
               </ItemPara>
             </Grid>
-
             <Grid item xs={12} sm={12} md={6}>
               <ItemPara>
                 <MenuBtn2
@@ -873,20 +880,6 @@ function Payroll() {
                 >
                   Generate Salary for All
                 </MenuBtn2>
-              </ItemPara>
-            </Grid>
-
-            <Grid item xs={12} sm={12} md={6}>
-              {/* Select Status Type */}
-              <ItemPara >
-                <Select
-                  className="select-empstatus"
-                  options={options}
-                  placeholder="Employee Status"
-                  onChange={(event) => {
-                    handleChange(event.value);
-                  }}
-                />
               </ItemPara>
             </Grid>
             <Grid item xs={12} md={12}>
@@ -906,8 +899,8 @@ function Payroll() {
                         }}
                       >
                         <StyEmpTableCell>Name</StyEmpTableCell>
-                        <StyTableCell>Designation</StyTableCell>
-                        <StyTableCell>Department</StyTableCell>
+                        <StyEmpTableCell>Designation</StyEmpTableCell>
+                        <StyEmpTableCell>Department</StyEmpTableCell>
                         <StyTableCell>Payment Details</StyTableCell>
                         <StyTableCell>Payslip</StyTableCell>
                       </TableRow>
@@ -926,12 +919,13 @@ function Payroll() {
                             <CardHeader
                               onClick={() => {
                                 window.location =
-                                  "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                                  "./employees?emp_id=" +
+                                  emp.emp_id.replaceAll("/", "_");
                               }}
                               sx={{
-                                color: 'blue',
-                                fontWeight: 'bold',
-                                cursor: 'pointer'
+                                color: "blue",
+                                fontWeight: "bold",
+                                cursor: "pointer",
                               }}
                               avatar={
                                 <Avatar
@@ -943,14 +937,11 @@ function Payroll() {
                                   }
                                 />
                               }
-
                               title={emp.name}
                             />
                           </TableCell>
-                          <TableCell align="center">
-                            {emp.designation}
-                          </TableCell>
-                          <TableCell align="center">{emp.department}</TableCell>
+                          <TableCell align="left">{emp.designation}</TableCell>
+                          <TableCell align="left">{emp.department}</TableCell>
                           <TableCell align="center">
                             {emp.pay && (
                               <YearlyBtn

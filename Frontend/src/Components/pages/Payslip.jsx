@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import "../css/style.css";
+import { StyButtonDownload } from "../css/styles";
 import logo from "../../images/logo-gratia.png";
 
 function Payslip() {
-  useEffect(() => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => init(), []);
+
+  function print() {
+    window.print();
+  }
+
+  function init() {
     const params = window.location.href.split("?")[1].split("&");
     const emp_id = params[0]
       .substring(4, params[0].length)
@@ -14,7 +22,7 @@ function Payslip() {
     checkEmployee(emp_id);
     checkBank(emp_id);
     checkPay(emp_id);
-  }, []);
+  }
 
   const params = window.location.href.split("?")[1].split("&");
   const month = params[1].substring(6, params[1].length);
@@ -162,9 +170,11 @@ function Payslip() {
             </td>
           </tr>
           <tr class="top border">
-            <th colspan="3">Employee ID</th>
+            <th colspan="2">Employee ID</th>
+            <td></td>
             <td class="myAlign">{salary.emp_id}</td>
-            <th colspan="3">UAN</th>
+            <th colspan="2">UAN</th>
+            <td></td>
             <td class="myAlign">{bank.uan}</td>
           </tr>
 
@@ -174,7 +184,6 @@ function Payslip() {
             <td class="myAlign">{emp.name}</td>
             <th colspan="2">ESIC Number</th>
             <td></td>
-
             <td class="myAlign">{bank.esic}</td>
           </tr>
 
@@ -332,6 +341,17 @@ function Payslip() {
             </td>
           </tr>
         </table>
+      </div>
+      <div>
+        <center>
+          <StyButtonDownload
+            id="printPageButton"
+            variant="contained"
+            onClick={print}
+          >
+            Download
+          </StyButtonDownload>
+        </center>
       </div>
     </div>
   );

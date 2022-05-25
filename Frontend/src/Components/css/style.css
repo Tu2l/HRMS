@@ -1,3 +1,14 @@
+table {
+    max-width: 2480px;
+    width: 100%;
+}
+
+table td {
+    width: auto;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
 .salary-slip {
     margin: 15px;
 }
@@ -54,8 +65,6 @@
     height: 40px;
 }
 
-
-
 .myAlign {
     text-align: right;
     border-right: 1px solid black;
@@ -95,6 +104,7 @@
 th,
 td {
     padding-left: 6px;
+    border-bottom: 0.01px solid rgb(140, 140, 140);
 }
 
 td {
@@ -111,3 +121,9 @@ td {
     background-color: rgb(19, 71, 121);
     color: rgb(248, 248, 248);
 }
+
+@media print {
+    #printPageButton {
+      display: none;
+    }
+  }

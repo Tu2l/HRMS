@@ -344,8 +344,7 @@
 }
 
 .select-empstatus {
-  margin-right: 3%;
-  width: auto;
+  width: 40%;
   margin-left: auto;
 }
 
@@ -402,6 +401,11 @@
   float: right;
   margin-right: 10px;
   margin-bottom: 5px;
+}
+
+.search {
+  width: 40%;
+  float: right;
 }
 
 .view-holidays {
