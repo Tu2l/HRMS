@@ -13,6 +13,6 @@ const bankSchema = new mongoose.Schema
             uan: { type: String, default: 'NA' }
         }
     )
-//bankSchema.index({ emp_id: 1, email: 1 }, { unique: true, unique: true })
+bankSchema.index({ emp_id: 1 }, { unique: true })
 
 export const Bank = mongoose.model("Bank", bankSchema)

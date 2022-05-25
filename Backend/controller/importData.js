@@ -94,8 +94,7 @@ async function saveEmp(data) {
 async function savePay(data) {
   const emp = await Bank.findOne({ account_no: data.account_no });
   if (!emp) throw new Error("No Details Found!");
-
-  const pay = new Pay({
+  const value = {
     emp_id: emp.emp_id,
     basic_pay: data.basic_pay,
     hra: data.hra,
@@ -103,10 +102,15 @@ async function savePay(data) {
     esic: data.esic,
     deductions: data.deductions,
     addition: data.addition,
-  });
-  await pay.save();
+  }
 
-  return pay.emp_id;
+  if (await Pay.findOne({ emp_id: emp.emp_id })) {
+    await Pay.updateOne({ emp_id: emp.emp_id }, { $set: value })
+  } else {
+    const pay = new Pay(value);
+    await pay.save();
+  }
+  return emp.emp_id;
 }
 
 export const importEmp = async (req, res) => {

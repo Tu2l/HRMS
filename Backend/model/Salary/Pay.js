@@ -18,4 +18,6 @@ const paySchema = new mongoose.Schema
         }
     )
 
+paySchema.index({ emp_id: 1 }, { unique: true })
+
 export const Pay = mongoose.model("Pay", paySchema)
