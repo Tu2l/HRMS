@@ -1,16 +1,20 @@
-name: Production workflow
+name: Development workflow
 
 on:
   push:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: Backend
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: HRMS Gratia
+      - name: HRMS Test
         uses: actions/checkout@v2
       - name: Use Node.js 17.x
         uses: actions/setup-node@v1
@@ -21,8 +25,7 @@ jobs:
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          args: deploy --dir=build --prod
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: 'hrms-prod-tu2l'
-          appdir: 'Backend'
           heroku_email: 'debroytutul@gmail.com'
+          appdir: "Backend"
