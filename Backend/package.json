@@ -2,8 +2,8 @@
   "name": "hrms",
   "version": "1.0.0",
   "description": "HRMS system for Gratia Technology",
-  "main": "index.js",
   "type": "module",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
@@ -19,8 +19,12 @@
   },
   "homepage": "https://github.com/GratiaTechnologyCTO/HRMS-Gratia#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.3",
-    "mongoose": "^6.2.6",
-    "nodemon": "^2.0.15"
+    "express-fileupload": "^1.3.1",
+    "moment": "^2.29.3",
+    "mongoose": "^6.3.1",
+    "nodemon": "^2.0.15",
+    "xlsx": "^0.18.5"
   }
 }

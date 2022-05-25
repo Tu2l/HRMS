@@ -1,5 +1,5 @@
 import express from 'express'
-import { login, register } from '../controller/rol.js'
+import { login, register, changeServiceStatus, changePassword } from '../controller/rol.js'
 
 export const rol = express.Router()
 
@@ -8,6 +8,12 @@ rol.post("/login", login)
 
 //register
 rol.post("/register", register)
+
+//change employee service status
+rol.post("/status", changeServiceStatus)
+
+//Change password
+rol.post("/change/password", changePassword)
 
 //404
 rol.use((req, res, next) => {

@@ -1,0 +1,172 @@
+<style>
+  input,
+  select {
+    padding: 10px;
+    margin: 5px;
+    width: 80%;
+    height: 50px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    border-width: 0px;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+  }
+
+  input:hover {
+    outline-color: green;
+  }
+
+  #submit {
+    border-color: #cacaca;
+    border-width: 0px;
+    border-radius: 5px;
+    background-color: orange;
+    font-weight: bold;
+  }
+
+  #submit:hover {
+    background-color: orangered;
+  }
+
+  h1 {
+    box-sizing: border-box;
+    border-radius: 5px 5px 0px 0px;
+    background-color: blue;
+    padding: 10px;
+    margin: 0px;
+    color: white;
+  }
+
+  .block {
+    background-color: #777877;
+    border-radius: 0px 0px 5px 5px;
+    box-shadow: 3px 3px hsla(0, 0%, 79%, 0.315);
+    padding: 30px;
+    justify-content: center;
+  }
+
+  #error {
+    color: red;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+  }
+
+  .parent {
+    width: 30%;
+  }
+
+  .sub-block {
+    background-color: white;
+    width: 80%;
+    border-radius: 5px;
+  }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  window.onload = getAttendance();
+
+  function registerAttendace() {
+    $("#submit").prop("disabled", true);
+    const attendanceType = $("#attendanceType").val();
+    const emp_id = JSON.parse(localStorage.getItem("data")).emp_id;
+    $.ajax({
+      url: "/api/attendance/register",
+      type: "post",
+      dataType: "json",
+      data: "emp_id=" + emp_id + "&attendanceType=" + attendanceType,
+      success: function (data) {
+        $("#submit").prop("disabled", false);
+        if (!data.error) {
+        } else {
+          alert(data.message);
+        }
+
+        getAttendance();
+      },
+    });
+  }
+
+  function getAttendance() {
+    // const attendanceType = $("#attendanceType").val()
+    const emp_id = JSON.parse(localStorage.getItem("data")).emp_id;
+    const date = $("#date").val();
+    $.ajax({
+      url: "/api/attendance/get",
+      type: "post",
+      dataType: "json",
+      data: "emp_id=" + emp_id + "&date=" + date,
+      success: function (data) {
+        // console.log(data)
+        if (!data.error) {
+          $("#attendanceList").empty();
+          data.data.forEach((attendance) => {
+            // console.log(attendance)
+            const div =
+              `<div class="sub-block">
+                                            <h3>` +
+              attendance.emp_id +
+              `<br></h3>
+                                            <p>` +
+              attendance.date +
+              `<br><br>` +
+              attendance.timestamp +
+              `<br><br>` +
+              (attendance.attendanceType == 1 ? `Checkin` : `Checkout`) +
+              ` Attendance <br><br>` +
+              `</p>` +
+              `</div>`;
+
+            $("#attendanceList").append(div);
+          });
+        } else {
+          alert(data.message);
+        }
+      },
+    });
+  }
+</script>
+<br />
+<br />
+
+<title>Demo Dashboard</title>
+
+<center>
+  <div class="parent">
+    <h1>Demo Dashboard</h1>
+    <div class="block" id="block">
+      <select id="attendanceType">
+        <option value="1">CheckIn</option>
+        <option value="2">CheckOut</option>
+      </select>
+      <input
+        type="button"
+        value="Register Attendance"
+        id="submit"
+        onclick="registerAttendace()"
+      /><br />
+    </div>
+  </div>
+
+  <br />
+  <div class="parent">
+    <h1>Attendance List</h1>
+    <div class="block" id="block">
+      <!-- <input type="date" name="date" id="date" date-format="MMMM DD YYYY"> -->
+      <input
+        type="date"
+        name="start_date"
+        id="date"
+        date-format="MMMM DD YYYY"
+      />
+      <input type="date" name="end_date" id="date" date-format="MMMM DD YYYY" />
+      <input
+        type="button"
+        value="Fetch"
+        id="submit"
+        onclick="getAttendance()"
+      /><br />
+      <div class="" id="attendanceList"></div>
+    </div>
+  </div>
+</center>
