@@ -486,7 +486,7 @@ function HRAttendance() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {empData.map((emp, index) => (
+                      {empData && empData.map((emp, index) => (
                         <TableRow
                           key={index}
                           sx={{

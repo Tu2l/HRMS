@@ -805,7 +805,7 @@ function Payroll() {
                   onClick={handleGenerateSalaryAll}
                   variant="contained"
                 >
-                  Generate Salary
+                  Generate Salary for All
                 </MenuBtn2>
               </ItemPara>
             </Grid>
@@ -928,7 +928,7 @@ function Payroll() {
                                 await checkSalary(emp.emp_id);
                               }}
                               variant="outlined"
-                              // disabled={!emp.pay}
+                              disabled={!emp.pay}
                             >
                               View
                             </YearlyBtn>
@@ -939,7 +939,7 @@ function Payroll() {
                                 handleGenerateSalarySingle(emp.emp_id);
                               }}
                               variant="outlined"
-                              // disabled={!emp.pay}
+                              disabled={!emp.pay}
                             >
                               Generate
                             </YearlyBtn>
