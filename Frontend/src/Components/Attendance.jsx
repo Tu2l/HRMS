@@ -129,7 +129,7 @@ function Attendance() {
           total: res.total_page,
           next: res.current_page,
         });
-        if (data.data)
+        if (data.data !== null)
           setEmpData(res.data);
       })
       .catch((error) => {

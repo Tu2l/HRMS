@@ -71,7 +71,7 @@ function HRAttendance() {
     getAttendance(data)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         setAttendancePage({
           current: data.current_page,
           total: data.total_page,
