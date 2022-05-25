@@ -38,7 +38,7 @@ function Attendance() {
   async function getCurrentDayAttendance(data) {
     const URL = window.location.href.startsWith("http://localhost")
       ? "http://localhost:5000/api/attendance/get/withdetails"
-      : "/api/attendance/get//withdetails";
+      : "/api/attendance/get/withdetails";
 
     const response = await fetch(URL, {
       method: "POST",
