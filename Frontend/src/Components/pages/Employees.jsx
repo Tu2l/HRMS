@@ -228,7 +228,7 @@ function Employees() {
             total: data.total_page,
             next: data.current_page,
           });
-
+          console.log(data)
           if (data.data != null) setEmpData(data.data);
         })
         .catch((error) => {
@@ -458,8 +458,8 @@ function Employees() {
         formData.append("file", fileField.files[0]);
 
         const UPLOAD_URL = window.location.href.startsWith("http://localhost")
-        ? "http://localhost:5000/api/import/emp"
-        : "/api/import/emp";
+          ? "http://localhost:5000/api/import/emp"
+          : "/api/import/emp";
 
         fetch(UPLOAD_URL, {
           method: "POST",
@@ -883,6 +883,15 @@ function Employees() {
                       >
                         <TableCell align="left">
                           <CardHeader
+                            onClick={() => {
+                              window.location =
+                                "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                            }}
+                            sx={{
+                              color: 'blue',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
                             avatar={
                               <Avatar
                                 alt="test"

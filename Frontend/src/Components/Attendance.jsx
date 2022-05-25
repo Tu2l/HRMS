@@ -276,8 +276,32 @@ function Attendance() {
                           },
                         }}
                       >
-                        <TableCell align="left">{emp.emp_id}</TableCell>
-                        <TableCell align="left">{emp.name}</TableCell>
+                        <TableCell align="left"
+                          onClick={() => {
+                            window.location =
+                              "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                          }}
+                          sx={{
+                            color: 'blue',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {emp.emp_id}
+                        </TableCell>
+                        <TableCell align="left"
+                          onClick={() => {
+                            window.location =
+                              "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                          }}
+                          sx={{
+                            color: 'blue',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {emp.name}
+                        </TableCell>
                         <TableCell align="left" sx={{ fontWeight: "bold" }}>
                           {getAttendanceTimeStamp(emp.attendance, 1)}
                         </TableCell>

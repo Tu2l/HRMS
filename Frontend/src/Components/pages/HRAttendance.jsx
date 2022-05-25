@@ -16,6 +16,7 @@ import {
   ItemPara,
   StyButton,
   StyTableCell,
+  StyEmpTableCell,
   LightTooltip,
   YearlyBtn,
   DltBtn,
@@ -480,9 +481,9 @@ function HRAttendance() {
                           backgroundColor: "rgb(19, 71, 129)",
                         }}
                       >
-                        <StyTableCell>Emp ID</StyTableCell>
-                        <StyTableCell>Name</StyTableCell>
-                        <StyTableCell></StyTableCell>
+                        <StyEmpTableCell>Emp ID</StyEmpTableCell>
+                        <StyEmpTableCell>Name</StyEmpTableCell>
+                        <StyTableCell>Action</StyTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -495,8 +496,32 @@ function HRAttendance() {
                             },
                           }}
                         >
-                          <TableCell align="center">{emp.emp_id}</TableCell>
-                          <TableCell align="center">{emp.name}</TableCell>
+                          <TableCell align="left"
+                            onClick={() => {
+                              window.location =
+                                "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                            }}
+                            sx={{
+                              color: 'blue',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {emp.emp_id}
+                          </TableCell>
+                          <TableCell align="left"
+                            onClick={() => {
+                              window.location =
+                                "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                            }}
+                            sx={{
+                              color: 'blue',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {emp.name}
+                          </TableCell>
                           <TableCell align="center">
                             <YearlyBtn
                               size="small"

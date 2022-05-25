@@ -129,7 +129,7 @@ export const searchUser = async (req, res) => {
           $options: "i",
         },
       },
-      ["emp_id", "email", "name", "dob", "phone", "designation", "department"]
+      ["emp_id", "email", "name", "join_date", "phone", "designation", "department","status"]
     )
       .sort({ name: "asc" })
       .skip(pageNumber > 1 ? (pageNumber - 1) * itemPerPage : 0)

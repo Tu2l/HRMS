@@ -17,6 +17,7 @@ import {
   Chip,
   Avatar,
   CardHeader,
+  TextField
 } from "@mui/material";
 import {
   style,
@@ -310,8 +311,8 @@ function Payroll() {
         formData.append("file", fileField.files[0]);
 
         const UPLOAD_URL = window.location.href.startsWith("http://localhost")
-        ? "http://localhost:5000/api/import/pay"
-        : "/api/import/pay";
+          ? "http://localhost:5000/api/import/pay"
+          : "/api/import/pay";
 
         fetch(UPLOAD_URL, {
           method: "POST",
@@ -333,6 +334,33 @@ function Payroll() {
       }
     });
   };
+
+  /* Search employee data */
+
+  async function search(e) {
+    const data = {
+      current_page: pages.next,
+      query: e.target.value,
+    };
+
+    if (data.query)
+      getEMPPay(data)
+        .then((response) => response.json())
+        .then((data) => {
+          setPage({
+            current: data.current_page,
+            total: data.total_page,
+            next: data.current_page,
+          });
+          console.log(data)
+          if (data.data != null) setEMP(data.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    else init();
+  }
+
 
   return (
     <div className="pay-main">
@@ -771,52 +799,11 @@ function Payroll() {
       <div>
         {/* Employee details table */}
         <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={0}>
-            <Grid item xs={12} sm={12} md={9}>
-              <LightTooltip title="Select Month" placement="right">
-                <StyTextFieldLeave
-                  sx={{ width: "30%", marginLeft: "0.9%" }}
-                  defaultValue={monthSelect}
-                  type="month"
-                  inputProps={{
-                    max: getYear() + "-" + getMonth(),
-                  }}
-                  onChange={(e) => setMonthSelect(e.target.value)}
-                  size="small"
-                  variant="outlined"
-                />
-              </LightTooltip>
-            </Grid>
-            <Grid item xs={12} sm={12} md={3}>
-              {/* Select Status Type */}
-              <Select
-                className="select-empstatus"
-                options={options}
-                placeholder="Employee Status"
-                onChange={(event) => {
-                  handleChange(event.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <ItemPara>
-                <MenuBtn2
-                  sx={{
-                    width: "auto",
-                    backgroundColor: "rgb(237, 89, 15)",
-                    letterSpacing: "2px",
-                  }}
-                  onClick={handleGenerateSalaryAll}
-                  variant="contained"
-                >
-                  Generate Salary for All
-                </MenuBtn2>
-              </ItemPara>
-            </Grid>
-            <Grid item xs={12} sm={12} md={8} sx={{ marginBottom: "-1%" }}>
+          <Grid container spacing={0} >
+            <Grid item xs={12} sm={12} md={12} sx={{ marginBottom: "-1%" }}>
               <ItemPara>
                 <YearlyBtn
-                  sx={{ marginLeft: "6px", marginTop: "1.5px", float: "right" }}
+                  sx={{ marginLeft: "6px", marginTop: "1.5px", float: "rigth" }}
                   type="button"
                   variant="outlined"
                   onClick={employeePayUpload}
@@ -833,12 +820,75 @@ function Payroll() {
                   ref={fileInputRef}
                   id="employeePayUpload"
                   type="file"
-                  sx={{ width: "35%", float: "right" }}
+                  sx={{ width: "35%", float: "left" }}
                   helperText="Upload Salary Document (.xslx)"
                 />
               </ItemPara>
             </Grid>
 
+            <Grid item xs={12} sm={12} md={6}>
+              <LightTooltip title="Select Month" placement="right">
+                <StyTextFieldLeave
+                  sx={{ width: "30%", marginLeft: "0.9%" }}
+                  defaultValue={monthSelect}
+                  type="month"
+                  inputProps={{
+                    max: getYear() + "-" + getMonth(),
+                  }}
+                  onChange={(e) => setMonthSelect(e.target.value)}
+                  size="small"
+                  variant="outlined"
+                />
+              </LightTooltip>
+            </Grid>
+
+
+
+            <Grid item xs={12} sm={12} md={6}>
+              <ItemPara>
+                <div className="search">
+                  <TextField
+                    fullWidth
+                    id="outlined"
+                    size="small"
+                    variant="outlined"
+                    placeholder="Name..."
+                    label="Search Employee..."
+                    onChange={search}
+                  />
+                </div>
+              </ItemPara>
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={6}>
+              <ItemPara>
+                <MenuBtn2
+                  sx={{
+                    width: "auto",
+                    backgroundColor: "rgb(237, 89, 15)",
+                    letterSpacing: "2px",
+                  }}
+                  onClick={handleGenerateSalaryAll}
+                  variant="contained"
+                >
+                  Generate Salary for All
+                </MenuBtn2>
+              </ItemPara>
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={6}>
+              {/* Select Status Type */}
+              <ItemPara >
+                <Select
+                  className="select-empstatus"
+                  options={options}
+                  placeholder="Employee Status"
+                  onChange={(event) => {
+                    handleChange(event.value);
+                  }}
+                />
+              </ItemPara>
+            </Grid>
             <Grid item xs={12} md={12}>
               <ItemPara>
                 <TableContainer sx={{ boxShadow: "none" }} component={Paper}>
@@ -874,6 +924,15 @@ function Payroll() {
                         >
                           <TableCell align="left">
                             <CardHeader
+                              onClick={() => {
+                                window.location =
+                                  "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                              }}
+                              sx={{
+                                color: 'blue',
+                                fontWeight: 'bold',
+                                cursor: 'pointer'
+                              }}
                               avatar={
                                 <Avatar
                                   alt="test"
@@ -884,6 +943,7 @@ function Payroll() {
                                   }
                                 />
                               }
+
                               title={emp.name}
                             />
                           </TableCell>

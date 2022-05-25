@@ -199,17 +199,32 @@ export const getPayDetails = async (req, res) => {
 export const getEmpPay = async (req, res) => {
   const out = {};
   try {
+    const query = req.body.query
+    const conditions = []
+    if (query) {
+      conditions.push({
+        name: {
+          $regex: query,
+          $options: "i",
+        }
+      })
+    }
+
+    conditions.push({ status: { $in: (req.body.status ? [req.body.status] : [0, 3, 4]) } })
+
     const pageNumber = parseInt(req.body.current_page) || 1;
     const itemPerPage = 10;
-    const total = await Employee.find({ status: { $in: (req.body.status ? [req.body.status] : [0, 3, 4]) } }).countDocuments();
 
-    const result = await Employee.find({ status: { $in: (req.body.status ? [req.body.status] : [0, 3, 4]) } }, [
-      "emp_id",
-      "name",
-      "designation",
-      "department",
-      "profile_img",
-    ])
+    const total = await Employee.find({ $and: conditions }).countDocuments();
+
+    const result = await Employee.find({ $and: conditions },
+      [
+        "emp_id",
+        "name",
+        "designation",
+        "department",
+        "profile_img",
+      ])
       .sort({ name: "asc" })
       .skip(pageNumber > 1 ? (pageNumber - 1) * itemPerPage : 0)
       .limit(itemPerPage);

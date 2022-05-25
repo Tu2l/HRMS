@@ -434,7 +434,7 @@ function Leaves() {
       }
     });
   }
-  
+
   const [reason, setReason] = useState("");
 
   const getFileUrl = (path) => {
@@ -467,7 +467,18 @@ function Leaves() {
             },
           }}
         >
-          <TableCell align="center">{getName(emp.emp_id)}</TableCell>
+          <TableCell align="center"
+            onClick={() => {
+              window.location =
+                "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+            }}
+            sx={{
+              color: 'blue',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}>
+            {getName(emp.emp_id)}
+          </TableCell>
           <TableCell align="center">{emp.applied_on.split("T")[0]}</TableCell>
           <TableCell align="center">{emp.start_date.split("T")[0]}</TableCell>
           <TableCell align="center">{emp.end_date.split("T")[0]}</TableCell>
@@ -675,7 +686,7 @@ function Leaves() {
                     Math.round(
                       (leaveDetails.monthly_leave + Number.EPSILON) * 100
                     ) /
-                      100 +
+                    100 +
                     " / Month"
                   }
                 />
@@ -886,8 +897,8 @@ function Leaves() {
                           {lea.status === 0
                             ? "Pending"
                             : lea.status === 1
-                            ? "Approved"
-                            : "Rejected"}
+                              ? "Approved"
+                              : "Rejected"}
                         </TableCell>
                       </TableRow>
                     ))}
