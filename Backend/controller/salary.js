@@ -129,10 +129,7 @@ async function generate(emp_id, month, year) {
   // console.log(deductions)
 
   const per_day = pay.basic_pay / total_days
-  const absent_deduct =
-    calculated.total_absent_days * per_day +
-    calculated.total_unpaid_leaves * per_day
-
+  const absent_deduct = ((calculated.total_absent_days * per_day) + (calculated.total_unpaid_leaves * per_day))
   deductions.push({
     name: "Leave Days",
     amount: absent_deduct,
@@ -187,7 +184,7 @@ async function generate(emp_id, month, year) {
     deductions: deductions,
     total_deductions: total_deductions,
     no_of_days: total_days,
-    total_unpaid_leaves: calculated.total_unpaid_leaves,
+    total_unpaid_leaves: (calculated.total_unpaid_leaves + calculated.total_absent_days),
     late_days: calculated.late_days
   })
 
