@@ -515,3 +515,12 @@ ul.members-list {
   color: rgb(19, 71, 129);
   margin-right: 5px;
 }
+
+.total {
+  padding: 8px;
+  background-color: #188e9e;
+  color: whitesmoke;
+  margin-top: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}

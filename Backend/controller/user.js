@@ -92,6 +92,7 @@ export const getUsers = async (req, res) => {
     out.current_page = pageNumber
     out.item_perpage = itemPerPage
     out.total_page = Math.ceil(total / itemPerPage)
+    out.total_items = total
     out.data = users
   } catch (err) {
     out.message = err.message
@@ -129,7 +130,7 @@ export const searchUser = async (req, res) => {
           $options: "i",
         },
       },
-      ["emp_id", "email", "name", "join_date", "phone", "designation", "department","status"]
+      ["emp_id", "email", "name", "join_date", "phone", "designation", "department", "status"]
     )
       .sort({ name: "asc" })
       .skip(pageNumber > 1 ? (pageNumber - 1) * itemPerPage : 0)
@@ -140,6 +141,7 @@ export const searchUser = async (req, res) => {
     out.current_page = pageNumber
     out.item_perpage = itemPerPage
     out.total_page = Math.ceil(total / itemPerPage)
+    out.total_items = total
     out.data = user
   } catch (err) {
     out.message = err.message
@@ -156,10 +158,19 @@ export const filterList = async (req, res) => {
   const out = {}
   try {
     const conditions = []
-    if (req.body.status)
-      conditions.push(
-        { 'status': req.body.status },
-      )
+    if (req.body.status) {
+      if (isNaN(req.body.status)) {
+        if (req.body.status.toLowerCase() === 'active')
+          conditions.push({ status: { $in: [0, 3, 4] } })
+        else if (req.body.status.toLowerCase() === 'inactive')
+          conditions.push({ status: { $in: [1, 2] } })
+        else
+          throw new Error('Employee Status code is invalid')
+      } else
+        conditions.push(
+          { 'status': req.body.status },
+        )
+    }
 
     if (req.body.designation)
       conditions.push(
@@ -171,6 +182,7 @@ export const filterList = async (req, res) => {
         { 'department': req.body.department },
       )
 
+    // console.log(req.body)
     const pageNumber = parseInt(req.body.current_page) || 1
     const itemPerPage = 10
     const total = await Employee
@@ -188,6 +200,7 @@ export const filterList = async (req, res) => {
     out.current_page = pageNumber
     out.item_perpage = itemPerPage
     out.total_page = Math.ceil(total / itemPerPage)
+    out.total_items = total
     out.data = projects
   } catch (err) {
     out.message = err.message

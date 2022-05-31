@@ -206,11 +206,12 @@ export default function Profile() {
                   >
                     {data.name}
                   </Typography>
-                  <Avatar alt="Avatar" src={
-                  data.profile_img
-                    ? "http://" + data.profile_img
-                    : avatar
-                } />
+                  <Avatar
+                    alt="Avatar"
+                    src={
+                      data.profile_img ? "http://" + data.profile_img : avatar
+                    }
+                  />
                   <KeyboardArrowDownIcon sx={{ color: "white" }} />
                 </IconButton>
               </Tooltip>
@@ -308,7 +309,7 @@ export default function Profile() {
               )}
             </IconButton>
           </DrawerHeader>
-          <div>
+          <div className="drawer-items">
             {/* //Drawer Items */}
 
             <DrawerItems open={open} isAdmin={isAdmin()} />

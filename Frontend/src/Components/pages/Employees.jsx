@@ -37,7 +37,7 @@ import avatar from "../../images/proavatar.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "@mui/material/Select";
-import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import "../css/ViewProfile.css";
 import ViewProfile from "./ViewProfile";
 toast.configure();
@@ -57,8 +57,9 @@ function Employees() {
 
   const [empData, setEmpData] = useState([]);
 
-  const paramSearch = useLocation().search;
-  const viewprofile = new URLSearchParams(paramSearch).get("emp_id") || false;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const viewprofile = searchParams.get("emp_id") || false;
+  let param_status = searchParams.get("status") || false;
 
   /* Pagination */
 
@@ -89,6 +90,17 @@ function Employees() {
     { value: "3", label: "On Notice Period" },
     { value: "4", label: "On Probation" },
   ];
+
+  const selectStatusFilter = [
+    { value: "active", label: "Active (In Service, On Notice Period, On Probation)" },
+    { value: "inactive", label: "InActive (Resigned, Terminated)" },
+    { value: "0", label: "In Service" },
+    { value: "1", label: "Resigned" },
+    { value: "2", label: "Terminated" },
+    { value: "3", label: "On Notice Period" },
+    { value: "4", label: "On Probation" },
+  ];
+
 
   // Delete employee
   async function deleteEmployeeConfirmation(event) {
@@ -228,7 +240,7 @@ function Employees() {
             total: data.total_page,
             next: data.current_page,
           });
-          console.log(data)
+          console.log(data);
           if (data.data != null) setEmpData(data.data);
         })
         .catch((error) => {
@@ -237,9 +249,11 @@ function Employees() {
     else init();
   }
 
+  const [numberOfItems, setNumberOfItems] = useState();
+
   async function init() {
     const data = {
-      current_page: pages.next,
+      current_page: pages.next
     };
 
     getEmployees(data)
@@ -251,7 +265,10 @@ function Employees() {
           next: data.current_page,
         });
 
-        if (data.data != null) setEmpData(data.data);
+        if (data.data != null) {
+          setNumberOfItems(data.total_items);
+          setEmpData(data.data);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -270,7 +287,14 @@ function Employees() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => init(), []);
+  useEffect(() => {
+    if (param_status) {
+      setStatusSelect(param_status)
+      handleSubmitFilter(null)
+    } else
+      init()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* Form States */
 
@@ -397,10 +421,11 @@ function Employees() {
   };
 
   async function handleSubmitFilter(e) {
-    e.preventDefault();
-    swal("Filter?", {
-      buttons: ["Oh no!", true],
-    }).then(async (value) => {
+    if (e)
+      e.preventDefault();
+
+    const get = async (value) => {
+      // console.log(value)
       if (value === true) {
         try {
           const AddURL = window.location.href.startsWith("http://localhost")
@@ -415,24 +440,29 @@ function Employees() {
             body: JSON.stringify({
               designation: designation,
               department: department,
-              status: statusSelect,
+              status: ((param_status) ? param_status : statusSelect),
             }),
           });
-
           let resjson = await res.json();
 
           if (!resjson.error) {
-            setDesignation("");
-            setDepartment("");
-            setStatusSelect("");
             setEmpData(resjson.data);
             setPage({
               current: resjson.data.current_page,
               total: resjson.data.total_page,
               next: resjson.data.current_page,
             });
-            swal(resjson.message.toUpperCase());
-            handleCloseFilter();
+            setNumberOfItems(resjson.total_items);
+
+            if (param_status) {
+              searchParams.delete('status')
+              setSearchParams(searchParams)
+              param_status = false
+            } else {
+              swal(resjson.message.toUpperCase());
+              handleCloseFilter();
+            }
+
           } else {
             swal("Failed");
           }
@@ -440,7 +470,16 @@ function Employees() {
           console.log(err);
         }
       }
-    });
+    }
+
+
+    if (!param_status)
+      swal("Filter?", {
+        buttons: ["Oh no!", true],
+      }).then(async (value) => get(value));
+    else
+      get(true)
+
   }
 
   const fileInputRef = useRef();
@@ -745,7 +784,7 @@ function Employees() {
                   value={statusSelect}
                   onChange={handleChangeStatus}
                 >
-                  {selectStatus.map((item) => {
+                  {selectStatusFilter.map((item) => {
                     return <MenuItem value={item.value}>{item.label}</MenuItem>;
                   })}
                 </Select>
@@ -789,17 +828,14 @@ function Employees() {
           </Grid>
           <Grid item xs={12} sm={12} md={3}>
             <ItemPara>
-              <div className="search">
-                <TextField
-                  sx={{ marginLeft: "24%" }}
-                  id="outlined"
-                  size="small"
-                  variant="outlined"
-                  placeholder="Name..."
-                  label="Search Employee..."
-                  onChange={search}
-                />
-              </div>
+              <TextField
+                sx={{ float: "right" }}
+                size="small"
+                variant="outlined"
+                placeholder="Name..."
+                label="Search Employee..."
+                onChange={search}
+              />
             </ItemPara>
           </Grid>
 
@@ -885,12 +921,13 @@ function Employees() {
                           <CardHeader
                             onClick={() => {
                               window.location =
-                                "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                                "./employees?emp_id=" +
+                                emp.emp_id.replaceAll("/", "_");
                             }}
                             sx={{
-                              color: 'blue',
-                              fontWeight: 'bold',
-                              cursor: 'pointer'
+                              color: "blue",
+                              fontWeight: "bold",
+                              cursor: "pointer",
                             }}
                             avatar={
                               <Avatar
@@ -964,6 +1001,9 @@ function Employees() {
               >
                 Download Excel
               </StyButtonDownload>
+              <span className="total" style={{ float: "right" }}>
+                Total Entries: {numberOfItems}
+              </span>
             </ItemPara>
           </Grid>
         </Grid>
@@ -983,12 +1023,6 @@ function Employees() {
               Next
             </StyButton>{" "}
             <br />
-            {/* <ReactLoading
-              type={"bars"}
-              color={"rgb(19, 71, 129)"}
-              height={200}
-              width={200}
-            /> */}
           </Grid>
         </Grid>
       </Box>

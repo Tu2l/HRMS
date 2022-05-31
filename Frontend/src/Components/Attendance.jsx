@@ -10,6 +10,9 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import {
   ItemPara,
@@ -21,17 +24,36 @@ import {
 } from "./css/styles";
 import "./css/profile.css";
 import swal from "sweetalert";
+import { useSearchParams } from "react-router-dom";
+import Select from "@mui/material/Select";
 
 /* Main Function */
 
 function Attendance() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  let param_attendanceType = searchParams.get("attendance_type") || "all";
+
   const [empData, setEmpData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getformattedDate());
+  const [selectedAttendanceType, setSelectedAttendanceType] =
+    useState(param_attendanceType);
 
-  var date = getformattedDate();
+  let date = getformattedDate();
   const setDate = (d) => {
     date = d;
   };
+
+  let attendance_type = "";
+  const setAttendanceType = (v) => {
+    if (v !== "all") attendance_type = v;
+  };
+
+  const attendanceFilterOptions = [
+    { value: "all", label: "All" },
+    { value: "present", label: "Present" },
+    { value: "absent", label: "Absent" },
+    { value: "late", label: "Late" },
+  ];
 
   /* Get Attendance Data */
 
@@ -100,7 +122,14 @@ function Attendance() {
   }
 
   const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
     setDate(e.target.value);
+    init();
+  };
+
+  const handleAttendanceTypeChange = (e) => {
+    setSelectedAttendanceType(e.target.value);
+    setAttendanceType(e.target.value);
     init();
   };
 
@@ -111,12 +140,18 @@ function Attendance() {
     else init();
   }
 
+  const [numberOfItems, setNumberOfItems] = useState();
+
   async function init(query) {
     const data = {
       current_page: pages.next,
       date: date,
+      attendance_type: attendance_type,
     };
 
+    // setAttendanceType(attendance_type)
+
+    console.log(data);
     if (query) data.query = query;
 
     /* Get Employees */
@@ -129,8 +164,19 @@ function Attendance() {
           total: res.total_page,
           next: res.current_page,
         });
-        if (data.data !== null)
+        if (res.data !== null) {
           setEmpData(res.data);
+          setNumberOfItems(res.total_items);
+        }
+
+        // console.log(res)
+        if (param_attendanceType) {
+          searchParams.delete("attendance_type");
+          setSearchParams(searchParams);
+          param_attendanceType = false;
+          setSelectedAttendanceType("all");
+          // console.log('deleted')
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -161,8 +207,12 @@ function Attendance() {
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => init(), []);
+  useEffect(() => {
+    setAttendanceType(selectedAttendanceType);
+    console.log(selectedAttendanceType);
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleGetDownload(e) {
     e.preventDefault();
@@ -200,17 +250,74 @@ function Attendance() {
     });
   }
 
+  async function handleGetDownloadMonth(e) {
+    e.preventDefault();
+    swal("Download File?", {
+      buttons: ["Oh no!", true],
+    }).then(async (value) => {
+      if (value === true) {
+        try {
+          const AddURL = window.location.href.startsWith("http://localhost")
+            ? "http://localhost:5000/api/export/attendance/month"
+            : "/api/export/attendance/month";
+
+          let res = await fetch(AddURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: selectedDate,
+            }),
+          });
+
+          let resjson = await res.json();
+
+          if (!resjson.error) {
+            window.open("http://" + resjson.data, "_blank");
+            swal("Downloaded");
+          } else {
+            swal("Failed");
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  }
+
   return (
     <div className="emp-main">
       <Grid container sx={{ marginBottom: "10px", marginLeft: "10px" }}>
         <Grid item xs={12} sm={6} md={9}>
+          <FormControl
+            size="small"
+            className="select-status"
+            sx={{ width: "35%" }}
+          >
+            <InputLabel>Attendance Status</InputLabel>
+            <Select
+              size="small"
+              label="Attendance Status"
+              defaultValue={param_attendanceType || "all"}
+              onChange={(e) => {
+                handleAttendanceTypeChange(e);
+              }}
+            >
+              {attendanceFilterOptions.map((item, index) => {
+                return (
+                  <MenuItem key={index} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
           <LightTooltip title="Select Date" placement="right">
             <TextField
-              sx={{
-                float: "left",
-              }}
               size="small"
               type="date"
+              sx={{ marginLeft: "4%" }}
               inputProps={{
                 max: getformattedDate(),
               }}
@@ -218,7 +325,6 @@ function Attendance() {
               value={selectedDate}
               onChange={(e) => {
                 handleDateChange(e);
-                setSelectedDate(e.target.value);
               }}
               required
             />
@@ -241,6 +347,20 @@ function Attendance() {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={0}>
           <Grid item xs={12} md={12}>
+            <StyButtonDownload
+              variant="contained"
+              sx={{ marginLeft: "0.5%" }}
+              onClick={handleGetDownload}
+            >
+              Download By Day
+            </StyButtonDownload>
+            <StyButtonDownload
+              variant="contained"
+              sx={{ marginLeft: "0.5%" }}
+              onClick={handleGetDownloadMonth}
+            >
+              Download By Month
+            </StyButtonDownload>
             <ItemPara>
               <span className="tablehead">
                 Today's Attendance ({selectedDate})
@@ -276,28 +396,32 @@ function Attendance() {
                           },
                         }}
                       >
-                        <TableCell align="left"
+                        <TableCell
+                          align="left"
                           onClick={() => {
                             window.location =
-                              "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                              "./employees?emp_id=" +
+                              emp.emp_id.replaceAll("/", "_");
                           }}
                           sx={{
-                            color: 'blue',
-                            fontWeight: 'bold',
-                            cursor: 'pointer'
+                            color: "blue",
+                            fontWeight: "bold",
+                            cursor: "pointer",
                           }}
                         >
                           {emp.emp_id}
                         </TableCell>
-                        <TableCell align="left"
+                        <TableCell
+                          align="left"
                           onClick={() => {
                             window.location =
-                              "./employees?emp_id=" + emp.emp_id.replaceAll("/", "_");
+                              "./employees?emp_id=" +
+                              emp.emp_id.replaceAll("/", "_");
                           }}
                           sx={{
-                            color: 'blue',
-                            fontWeight: 'bold',
-                            cursor: 'pointer'
+                            color: "blue",
+                            fontWeight: "bold",
+                            cursor: "pointer",
                           }}
                         >
                           {emp.name}
@@ -318,13 +442,9 @@ function Attendance() {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <StyButtonDownload
-                sx={{ float: "left" }}
-                variant="contained"
-                onClick={handleGetDownload}
-              >
-                Download Excel
-              </StyButtonDownload>
+              <span className="total" style={{ float: "right" }}>
+                Total Entries: {numberOfItems}
+              </span>
             </ItemPara>
           </Grid>
         </Grid>

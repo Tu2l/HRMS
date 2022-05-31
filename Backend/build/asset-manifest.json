@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.157ec3c8.css",
-    "main.js": "/static/js/main.932b6b4d.js",
+    "main.css": "/static/css/main.80f6ab98.css",
+    "main.js": "/static/js/main.75341447.js",
     "static/media/error1.jpg": "/static/media/error1.a11b1f1b097ab8e61c94.jpg",
     "static/media/logo-gratia.png": "/static/media/logo-gratia.71c5bd2398b26e6810b8.png",
     "static/media/working.png": "/static/media/working.a3faa90185a7e441bc50.png",
@@ -13,11 +13,11 @@
     "static/media/activities.png": "/static/media/activities.98a2e17a74a9eae20b0b.png",
     "static/media/exit.png": "/static/media/exit.311627177264b72dc907.png",
     "index.html": "/index.html",
-    "main.157ec3c8.css.map": "/static/css/main.157ec3c8.css.map",
-    "main.932b6b4d.js.map": "/static/js/main.932b6b4d.js.map"
+    "main.80f6ab98.css.map": "/static/css/main.80f6ab98.css.map",
+    "main.75341447.js.map": "/static/js/main.75341447.js.map"
   },
   "entrypoints": [
-    "static/css/main.157ec3c8.css",
-    "static/js/main.932b6b4d.js"
+    "static/css/main.80f6ab98.css",
+    "static/js/main.75341447.js"
   ]
 }

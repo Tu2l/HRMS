@@ -130,28 +130,26 @@ export const getAttendance = async (req, res) => {
 export const getEmpNAttendance = async (req, res) => {
     const out = {}
     try {
-        // console.log(conditions)
-        const query = req.body.query
+        const attendanceType = req.body.attendance_type
 
-        const pageNumber = parseInt(req.body.current_page) || 1
-        const itemPerPage = 10
-        const total = await Employee.find(query ?
-            {
+        const query = req.body.query
+        const conditions = []
+        if (query) {
+            conditions.push({
                 name: {
                     $regex: query,
                     $options: "i",
-                },
-            } : { status: { $in: (req.body.status ? [req.body.status] : [0, 3, 4]) } }, ["emp_id"]).countDocuments()
+                }
+            })
+        }
 
-        const results = await Employee.find(query ?
-            {
-                name:
-                {
-                    $regex: query,
-                    $options: "i",
-                },
-            } : { status: { $in: (req.body.status ? [req.body.status] : [0, 3, 4]) } }, ["emp_id", "name", "phone", "designation", "profile_img",]
-        )
+        conditions.push({ status: { $in: (req.body.status ? [req.body.status] : [0, 3, 4]) } })
+
+        const pageNumber = parseInt(req.body.current_page) || 1
+        const total = await Employee.find({ $and: conditions }).countDocuments()
+        const itemPerPage = (attendanceType) ? total : 10
+
+        const results = await Employee.find({ $and: conditions }, ["emp_id", "name", "phone", "designation", "profile_img",])
             .sort({ name: "asc" })
             .skip(pageNumber > 1 ? (pageNumber - 1) * itemPerPage : 0)
             .limit(itemPerPage)
@@ -176,8 +174,26 @@ export const getEmpNAttendance = async (req, res) => {
                     break
                 }
             }
+
+
+            switch (attendanceType ? attendanceType.toLowerCase() : 'xyz') {
+                case 'present':
+                    if (attendance !== null && attendance.length > 0)
+                        employees.push(emp)
+                    break
+                case 'absent':
+                    if (attendance === null || attendance.length == 0)
+                        employees.push(emp)
+                    break
+                case 'late':
+                    if (attendance != null && emp.remark === 'Late')
+                        employees.push(emp)
+                    break
+                default:
+                    employees.push(emp)
+                    break
+            }
             // console.log(attendance)
-            employees.push(emp)
         }
 
         out.message = "success"
@@ -185,6 +201,7 @@ export const getEmpNAttendance = async (req, res) => {
         out.current_page = pageNumber
         out.item_perpage = itemPerPage
         out.total_page = Math.ceil(total / itemPerPage)
+        out.total_items = attendanceType ? employees.length : total
         out.data = employees
 
     } catch (err) {
@@ -251,7 +268,7 @@ export const byRange = async (req, res) => {
 
         const attendances = []
         for (let j = 0; j < result.length; j++) {
-            const att = {...result[j]._doc}
+            const att = { ...result[j]._doc }
             if (att.attendanceType == 1) {
                 att.remark = getRemark(att.timestamp)
             }

@@ -93,6 +93,7 @@ function Payroll() {
 
     return response;
   }
+  const [numberOfItems, setNumberOfItems] = useState();
 
   async function init(status) {
     const data = {
@@ -110,6 +111,7 @@ function Payroll() {
         });
 
         if (data.data != null) {
+          setNumberOfItems(data.total_items);
           setEMP(data.data);
         }
       })
@@ -359,6 +361,42 @@ function Payroll() {
           console.error("Error:", error);
         });
     else init();
+  }
+
+  async function handleGetDownloadPayMonth(e) {
+    e.preventDefault();
+    swal("Download File?", {
+      buttons: ["Oh no!", true],
+    }).then(async (value) => {
+      if (value === true) {
+        try {
+          const AddURL = window.location.href.startsWith("http://localhost")
+            ? "http://localhost:5000/api/export/pay"
+            : "/api/export/pay";
+
+          let res = await fetch(AddURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: monthSelect,
+            }),
+          });
+
+          let resjson = await res.json();
+
+          if (!resjson.error) {
+            window.open("http://" + resjson.data, "_blank");
+            swal("Downloaded");
+          } else {
+            swal("Failed");
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
   }
 
   return (
@@ -799,7 +837,7 @@ function Payroll() {
         {/* Employee details table */}
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={0}>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={6} sm={6} md={6}>
               <LightTooltip title="Select Month" placement="right">
                 <StyTextFieldLeave
                   sx={{ width: "30%", marginLeft: "1%" }}
@@ -814,7 +852,7 @@ function Payroll() {
                 />
               </LightTooltip>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={6} sm={6} md={6}>
               <ItemPara>
                 <div className="search">
                   <TextField
@@ -829,7 +867,7 @@ function Payroll() {
                 </div>
               </ItemPara>
             </Grid>
-            <Grid item xs={12} sm={12} md={6} sx={{ marginBottom: "-1%" }}>
+            <Grid item xs={6} sm={6} md={6} sx={{ marginBottom: "-1%" }}>
               <ItemPara>
                 <YearlyBtn
                   sx={{ marginLeft: "6px", marginTop: "1.5px" }}
@@ -854,7 +892,7 @@ function Payroll() {
                 />
               </ItemPara>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={6} sm={6} md={6}>
               {/* Select Status Type */}
               <ItemPara>
                 <Select
@@ -867,7 +905,7 @@ function Payroll() {
                 />
               </ItemPara>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={6} sm={6} md={6}>
               <ItemPara>
                 <MenuBtn2
                   sx={{
@@ -879,6 +917,23 @@ function Payroll() {
                   variant="contained"
                 >
                   Generate Salary for All
+                </MenuBtn2>
+              </ItemPara>
+            </Grid>
+            <Grid item xs={6} sm={6} md={6}>
+              <ItemPara>
+                <MenuBtn2
+                  variant="contained"
+                  sx={{
+                    float: "right",
+                    width: "auto",
+                    marginLeft: "14px",
+                    marginTop: "0",
+                    backgroundColor: "rgb(237, 89, 15)",
+                  }}
+                  onClick={handleGetDownloadPayMonth}
+                >
+                  Download Salary Report
                 </MenuBtn2>
               </ItemPara>
             </Grid>
@@ -1004,6 +1059,9 @@ function Payroll() {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                <span className="total" style={{ float: "right" }}>
+                  Total Entries: {numberOfItems}
+                </span>
               </ItemPara>
             </Grid>
           </Grid>

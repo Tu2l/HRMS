@@ -60,6 +60,33 @@ function Dashboard() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => init(), []);
 
+  function redirectToActiveEmp() {
+    window.location.href = './employees?status=active'
+  }
+
+  function redirectToInActiveEmp() {
+    window.location.href = './employees?status=inactive'
+  }
+
+  function redirectToPendingLeaves() {
+    window.location.href = './leaves'
+  }
+
+  function redirectToPendingProject() {
+    window.location.href = './projects'
+  }
+
+  function redirectToPresent() {
+    window.location.href = './hrattendance?attendance_type=present'
+  }
+  function redirectToAbsent() {
+    window.location.href = './hrattendance?attendance_type=absent'
+  }
+
+  function redirectToLate() {
+    window.location.href = './hrattendance?attendance_type=late'
+  }
+
   return (
     <div className="dash-main">
       <Box
@@ -70,7 +97,7 @@ function Dashboard() {
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToActiveEmp} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Active Employees</h3>
                   <p className="profile-num">
@@ -81,7 +108,7 @@ function Dashboard() {
               </ItemPara>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToInActiveEmp} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Inactive Employees</h3>
                   <p className="profile-num">
@@ -92,7 +119,7 @@ function Dashboard() {
               </ItemPara>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToPresent} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Present</h3>
                   <p className="profile-num">
@@ -103,7 +130,7 @@ function Dashboard() {
               </ItemPara>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToAbsent} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Absent</h3>
                   <p className="profile-num">
@@ -114,7 +141,7 @@ function Dashboard() {
               </ItemPara>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToLate} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Late</h3>
                   <p className="profile-num" style={{ marginRight: "4%" }}>
@@ -125,7 +152,7 @@ function Dashboard() {
               </ItemPara>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToPendingLeaves} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Leave Requests</h3>
                   <p className="profile-num" style={{ marginRight: "10%" }}>
@@ -138,7 +165,7 @@ function Dashboard() {
               </ItemPara>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <ItemPara>
+              <ItemPara onClick={redirectToPendingProject} sx={{ cursor: 'pointer' }}>
                 <Typography>
                   <h3 className="profile-h3">Pending Projects</h3>
                   <p className="profile-num" style={{ marginRight: "4%" }}>

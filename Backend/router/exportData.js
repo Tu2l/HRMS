@@ -1,11 +1,15 @@
 import express from "express";
-import { exportAttendance,exportEmp } from "../controller/exportData.js";
+import { exportAttendance, exportAttendanceByMonth, exportEmp, exportSalaryByMonth } from "../controller/exportData.js";
 
 export const exportdata = express.Router();
 
 exportdata.post('/emp', exportEmp)
 
 exportdata.post('/attendance', exportAttendance)
+
+exportdata.post('/attendance/month', exportAttendanceByMonth)
+
+exportdata.post('/pay', exportSalaryByMonth)
 
 //404
 exportdata.use((req, res, next) => {

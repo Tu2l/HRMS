@@ -241,6 +241,7 @@ export const getEmpPay = async (req, res) => {
     out.current_page = pageNumber;
     out.item_perpage = itemPerPage;
     out.total_page = Math.ceil(total / itemPerPage);
+    out.total_items =  total
     out.data = users;
   } catch (err) {
     out.message = err.message;

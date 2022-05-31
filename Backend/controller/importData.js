@@ -23,7 +23,7 @@ function getTextDate(stringDate) {
 }
 
 async function saveEmp(data) {
-  if (!data.emp.email) throw new Error('Email Not Found')
+  if (!data.emp.email) throw new Error("Email Not Found");
 
   //checking if the an employee already exist with the same email id
   const userCheck = await Employee.findOne({ email: data.emp.email }, [
@@ -31,7 +31,6 @@ async function saveEmp(data) {
   ]);
 
   if (userCheck) throw Error("Email already registered");
-
 
   const last_emp = await Employee.find().sort({ _id: -1 }).limit(1);
   var num = 1;
@@ -46,10 +45,10 @@ async function saveEmp(data) {
     (num <= 9
       ? "000" + num
       : num <= 99
-        ? "00" + num
-        : num <= 999
-          ? "0" + num
-          : num) +
+      ? "00" + num
+      : num <= 999
+      ? "0" + num
+      : num) +
     "/" +
     year.toString().substring(2);
 
@@ -63,7 +62,6 @@ async function saveEmp(data) {
     .createHmac("sha256", data.emp.email)
     .update(passName + passYear)
     .digest("hex");
-
 
   const emp = new Employee({
     emp_id: emp_id,
@@ -83,7 +81,6 @@ async function saveEmp(data) {
   const personalDetail = new PersonalDetail({ ...data.personal_info });
   await personalDetail.save();
 
-
   data.bank.emp_id = emp_id;
   const bank = new Bank({ ...data.bank });
   await bank.save();
@@ -102,10 +99,10 @@ async function savePay(data) {
     esic: data.esic,
     deductions: data.deductions,
     addition: data.addition,
-  }
+  };
 
   if (await Pay.findOne({ emp_id: emp.emp_id })) {
-    await Pay.updateOne({ emp_id: emp.emp_id }, { $set: value })
+    await Pay.updateOne({ emp_id: emp.emp_id }, { $set: value });
   } else {
     const pay = new Pay(value);
     await pay.save();
@@ -131,8 +128,7 @@ export const importEmp = async (req, res) => {
       emp.name = res["Employee Name"];
       emp.email = res["Official Email ID"];
 
-      if (!emp.email)
-        emp.email = res["Personal Email ID"];
+      if (!emp.email) emp.email = res["Personal Email ID"];
 
       emp.phone = res["Mobile No."];
       emp.dob = res["DOB"];
@@ -220,7 +216,11 @@ export const importPay = async (req, res) => {
         : "NA";
       pay.basic_pay = res["Basic 40%"] ? res["Basic 40%"] : 0;
       pay.hra = res["HRA 30%"] ? res["HRA 30%"] : 0;
-      pay.esic = pay.basic_pay * 0.04;
+
+      if (res["ESIC 3.25%"] && res["ESIC 0.75%"])
+        pay.esic = res["ESIC 3.25%"] + res["ESIC 0.75%"];
+      else pay.esic = 0;
+
       pay.epf = pay.basic_pay * 0.24;
 
       const deductions = [];
@@ -241,8 +241,18 @@ export const importPay = async (req, res) => {
       const addition = [];
       addition.push(
         { name: "Conveyance", amount: res["CA 15%"] ? res["CA 15%"] : 0 },
-        { name: "Special Allowance", amount: res["Special Allowance 15%"] ? res["Special Allowance 15%"] : 0 },
-        { name: "Performance Allowance", amount: res["Performance Allowance"] ? res["Performance Allowance"] : 0 },
+        {
+          name: "Special Allowance",
+          amount: res["Special Allowance 15%"]
+            ? res["Special Allowance 15%"]
+            : 0,
+        },
+        {
+          name: "Performance Allowance",
+          amount: res["Performance Allowance"]
+            ? res["Performance Allowance"]
+            : 0,
+        },
         { name: "Bonus", amount: res["Bonus"] ? res["Bonus"] : 0 }
       );
       pay.addition = addition;
