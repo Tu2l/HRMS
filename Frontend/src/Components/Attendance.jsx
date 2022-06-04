@@ -38,7 +38,7 @@ function Attendance() {
   const [selectedAttendanceType, setSelectedAttendanceType] =
     useState(param_attendanceType);
 
-  let date = getformattedDate();
+  let date = selectedDate;
   const setDate = (d) => {
     date = d;
   };
@@ -149,9 +149,7 @@ function Attendance() {
       attendance_type: attendance_type,
     };
 
-    // setAttendanceType(attendance_type)
-
-    console.log(data);
+    // console.log('AttendanceType:'+attendance_type)
     if (query) data.query = query;
 
     /* Get Employees */

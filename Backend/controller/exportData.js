@@ -114,7 +114,7 @@ export const exportAttendance = async (req, res) => {
                 $and:
                     [
                         { emp_id: results[i].emp_id },
-                        { date: req.body.date },
+                        { date: getformattedDate(req.body.date) },
                     ]
             })
 
@@ -184,7 +184,7 @@ export const exportAttendanceByMonth = async (req, res) => {
                     $and:
                         [
                             { emp_id: results[i].emp_id },
-                            { date: start_date },
+                            { date: getformattedDate(start_date) },
                             { attendanceType: 1 }
                         ]
                 })
